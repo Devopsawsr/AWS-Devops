@@ -2,17 +2,42 @@ pipeline {
     agent any
     stages {    
         stage('Running on MNP-Dev Environment') {
-            steps{
+            steps {
+                // Checkout the source code from the SCM repository
                 checkout scm
+
+                // Echo message and list files
                 echo "Removing files and folders"
                 sh 'ls -al'
+
+                // Remove the .git directory
                 sh 'rm -rf .git'
-                echo "Deploying on MNP-DEV Environment by Code deploy"    
-                step([$class: 'AWSCodeDeployPublisher',
-                       applicationName:'mnptech-dev-app',
-                       awsAccessKey: '', awsSecretKey: '', deploymentConfig: 'CodeDeployDefault.OneAtATime', deploymentGroupAppspec: false, deploymentGroupName: 'mnptech-dev-dg', excludes: '', iamRoleArn: '', includes: '**', proxyHost: '', proxyPort: 0, region: 'us-east-1', s3bucket: 'mnptech-app-artif ', s3prefix: 'mnptech-dev-app', subdirectory: '', versionFileName: '', waitForCompletion: false?]
-                    )    
-            }    
-        }                
+
+                // Echo message before deployment
+                echo "Deploying on MNP-DEV Environment by CodeDeploy"
+
+                // Deploy to AWS CodeDeploy
+                step([
+                    $class: 'AWSCodeDeployPublisher',
+                    applicationName: 'mnptech-dev-app',
+                    awsAccessKey: '',
+                    awsSecretKey: '',
+                    deploymentConfig: 'CodeDeployDefault.OneAtATime',
+                    deploymentGroupAppspec: false,
+                    deploymentGroupName: 'mnptech-dev-dg',
+                    excludes: '',
+                    iamRoleArn: '',
+                    includes: '**',
+                    proxyHost: '',
+                    proxyPort: 0,
+                    region: 'us-east-1',
+                    s3bucket: 'mnptech-app-artif',
+                    s3prefix: 'mnptech-dev-app',
+                    subdirectory: '',
+                    versionFileName: '',
+                    waitForCompletion: false
+                ])
+            }
+        }
     }
 }
