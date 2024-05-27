@@ -35,7 +35,8 @@ pipeline {
                     s3prefix: 'mnptech-dev-app',
                     subdirectory: '',
                     versionFileName: '',
-                    waitForCompletion: false
+                    waitForCompletion: true,
+                    pollingInterval: 600
                 ])
             }
         }
